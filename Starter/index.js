@@ -1,6 +1,7 @@
 // TODO: Include packages needed for this application
 const inquirer = require('inquirer'); // requires the inquirer package
 const fs = require('fs'); // import file system
+const markdown = require('./utils/generateMarkdown');
 
 
 // TODO: Create an array of questions for user input
@@ -13,33 +14,33 @@ const questions = () => {
     },
     {
         type: 'input',
-        name: 'project description',
+        name: 'description',
         message: 'Give a description of your project'
     },
     {
         type: 'input',
-        name: 'installation instructions',
+        name: 'installation',
         message: 'What command should be run to install dependencies to your package.json?'
     },
     {
         type: 'input',
-        name: 'usage information',
+        name: 'usage',
         message: 'What information does the user need in order to use your application?'
     },
     {
         type: 'input',
-        name: 'contribution guidelines',
+        name: 'contribution',
         message: 'What do users need to know about contributing to the repository?',
         default: 'Create user specific branch/do not push to main'
     },
     {
         type: 'input',
-        name: 'test instructions',
+        name: 'test',
         message: 'What should the user input in the command-line in order to run tests?',
         default: 'npm run test'
     },
     {
-        type: 'list',
+        type: 'checkbox', 
         name: 'license',
         message: 'What kind of license does your project have?',
         choices: ['Apache License 2.0', 'GNU General Public License v3.0', 'MIT License', 'BSD 2-Clause', 'The Unlicense', 'None']
@@ -59,12 +60,12 @@ const questions = () => {
 ]);
 };
 
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
 
 // TODO: Create a function to initialize app
 function init() {
-    questions().then
+    questions().then((answers) => fs.writeFileSync('README.md', markdown(answers)))
+    .then(() => console.log('Successfully generated README'))
+    .catch((err) => console.error(err));
 };
 
 // Function call to initialize app
